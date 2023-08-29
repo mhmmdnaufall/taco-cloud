@@ -2,6 +2,7 @@ package mhmmdnaufall.tacos.web
 
 import jakarta.validation.Valid
 import mhmmdnaufall.tacos.TacoOrder
+import mhmmdnaufall.tacos.data.OrderRepository
 import org.slf4j.Logger
 import org.springframework.stereotype.Controller
 import org.springframework.validation.Errors
@@ -14,7 +15,9 @@ import org.springframework.web.bind.support.SessionStatus
 @Controller
 @RequestMapping("/orders")
 @SessionAttributes("tacoOrder")
-class OrderController {
+class OrderController(
+        private val orderRepository: OrderRepository
+) {
 
     @GetMapping("/current")
     fun orderForm() = "orderForm"
@@ -30,6 +33,7 @@ class OrderController {
         return if (errors.hasErrors()) {
             "orderForm"
         } else {
+            orderRepository.save(order)
             log.info("Order submitted: {}", order)
             sessionStatus.setComplete()
             "redirect:/"

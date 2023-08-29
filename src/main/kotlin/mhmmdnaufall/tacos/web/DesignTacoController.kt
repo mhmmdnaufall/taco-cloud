@@ -5,6 +5,7 @@ import mhmmdnaufall.tacos.Ingredient
 import mhmmdnaufall.tacos.Ingredient.Type
 import mhmmdnaufall.tacos.Taco
 import mhmmdnaufall.tacos.TacoOrder
+import mhmmdnaufall.tacos.data.IngredientRepository
 import org.slf4j.Logger
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.SessionAttributes
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("tacoOrder")
-class DesignTacoController {
+class DesignTacoController(
+        private val ingredientRepository: IngredientRepository
+) {
 
     @GetMapping
     fun showDesignForm() = "design"
@@ -43,24 +46,11 @@ class DesignTacoController {
 
     @ModelAttribute
     fun addIngredientsToModel(model: Model) {
-        val ingredients =  listOf(
-                Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
-                Ingredient("COTO", "Corn Tortilla", Type.WRAP),
-                Ingredient("GRBF", "Ground Beef", Type.PROTEIN),
-                Ingredient("CARN", "Carnitas", Type.PROTEIN),
-                Ingredient("TMTO", "Diced Tomatoes", Type.VEGGIES),
-                Ingredient("LETC", "Lettuce", Type.VEGGIES),
-                Ingredient("CHED", "Cheddar", Type.CHEESE),
-                Ingredient("JACK", "Monterrey Jack", Type.CHEESE),
-                Ingredient("SLSA", "Salsa", Type.SAUCE),
-                Ingredient("SRCR", "Sour Cream", Type.SAUCE)
-        )
-
-        val types: Array<Type> = Type.values()
-        for (type in types) {
+        val ingredients: List<Ingredient> = ingredientRepository.findAll()
+        val types: Array<Type> = Ingredient.Type.values()
+        types.forEach { type ->
             model.addAttribute(type.toString().lowercase(), filterByType(ingredients, type))
         }
-
     }
 
     @ModelAttribute(name = "tacoOrder")

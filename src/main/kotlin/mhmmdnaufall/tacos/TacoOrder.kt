@@ -4,8 +4,14 @@ import jakarta.validation.constraints.Digits
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import org.hibernate.validator.constraints.CreditCardNumber
+import java.io.Serializable
+import java.util.*
 
 data class TacoOrder(
+
+        var id: Long? = null,
+
+        var placedAt: Date? = null,
 
         @field:NotBlank(message = "Delivery name is required")
         var deliveryName: String? = null,
@@ -35,8 +41,13 @@ data class TacoOrder(
         var ccCVV: String? = null,
 
         var tacos: MutableList<Taco> = mutableListOf()
-) {
+) : Serializable {
     fun addTaco(taco: Taco) {
         tacos.add(taco)
     }
+
+    companion object {
+        private const val serialVersionUID = 1L
+    }
+
 }
