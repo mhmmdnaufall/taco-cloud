@@ -19,9 +19,6 @@ class DesignAndOrderTacosBrowserTest {
     @LocalServerPort
     private var port: Int? = null
 
-    @Autowired
-    private lateinit var rest: TestRestTemplate
-
     @Test
     fun `testDesignATacoPage HappyPath`() {
         browser.get(homePageUrl())

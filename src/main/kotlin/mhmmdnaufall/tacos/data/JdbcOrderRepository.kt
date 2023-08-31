@@ -97,14 +97,16 @@ class JdbcOrderRepository(
             """
                 SELECT id, name, created_at FROM Taco
                 WHERE taco_order=? order by taco_order_key
-            """.trimIndent()) { row, _ ->
-        Taco(
-                id = row.getLong("id"),
-                name = row.getString("name"),
-                createdAt = Date(row.getTimestamp("created_at").time),
-                ingredients = findIngredientsByTacoId(row.getLong("id")).toMutableList()
-        )
-    }
+            """.trimIndent(), { row, _ ->
+                Taco(
+                        id = row.getLong("id"),
+                        name = row.getString("name"),
+                        createdAt = Date(row.getTimestamp("created_at").time),
+                        ingredients = findIngredientsByTacoId(row.getLong("id")).toMutableList()
+                )
+            },
+            orderId
+    )
 
     private fun saveTaco(orderId: Long?, orderKey: Int, taco: Taco): Long {
         taco.createdAt = Date()

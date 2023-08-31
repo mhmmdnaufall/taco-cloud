@@ -10,8 +10,6 @@ class IngredientByIdConverter(
         private val ingredientRepository: IngredientRepository
 ) : Converter<String, Ingredient> {
 
-    private val ingredientMap = mutableMapOf<String, Ingredient>()
-
     override fun convert(id: String): Ingredient? = ingredientRepository.findById(id)
 
 }
